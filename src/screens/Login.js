@@ -3,6 +3,7 @@ import {
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Title = styled.h1`
@@ -24,7 +25,7 @@ const Wrapper = styled.div`
 
 const WhiteBox = styled.div`
   background-color: white;
-  border: 1px solid rgb(219, 219, 219);
+  border: 1px solid ${(props) => props.theme.borderColor};
   width: 100%;
 `;
 
@@ -42,28 +43,32 @@ const TopBox = styled(WhiteBox)`
     justify-items: center;
     flex-direction: column;
     align-items: center;
-    input {
-      width: 100%;
-      border-radius: 3px;
-      padding: 7px;
-      background-color: #fafafa;
-      border: 0.5px solid rgb(219, 219, 219);
-      margin-top: 5px;
-      box-sizing: border-box;
-      &::placeholder {
-        font-size: 12px;
-      }
-      &:last-child {
-        border: none;
-        margin-top: 12px;
-        background-color: #0095f6;
-        color: white;
-        text-align: center;
-        padding: 6px 0px;
-        font-weight: 600;
-      }
-    }
   }
+`;
+
+const Input = styled.input`
+  width: 100%;
+  border-radius: 3px;
+  padding: 7px;
+  background-color: #fafafa;
+  border: 0.5px solid ${(props) => props.theme.borderColor};
+  margin-top: 5px;
+  box-sizing: border-box;
+  &::placeholder {
+    font-size: 12px;
+  }
+`;
+
+const Button = styled.input`
+  border: none;
+  margin-top: 12px;
+  border-radius: 3px;
+  background-color: ${(props) => props.theme.accent};
+  color: white;
+  text-align: center;
+  padding: 6px 0px;
+  font-weight: 600;
+  width: 100%;
 `;
 
 const BottomBox = styled(WhiteBox)`
@@ -71,7 +76,8 @@ const BottomBox = styled(WhiteBox)`
   text-align: center;
   a {
     font-weight: 600;
-    color: #0095f6;
+    margin-left: 5px;
+    color: ${(props) => props.theme.accent};
   }
 `;
 
@@ -85,11 +91,12 @@ const Seperator = styled.div`
   div {
     width: 100%;
     height: 1px;
-    background-color: rgb(219, 219, 219);
+    background-color: ${(props) => props.theme.borderColor};
   }
   span {
     margin: 0px 10px;
     font-weight: 600;
+    font-size: 12px;
     color: #8e8e8e;
   }
 `;
@@ -111,9 +118,9 @@ const Login = () => {
             <FontAwesomeIcon icon={faInstagram} size="3x" />
           </div>
           <form>
-            <input type="text" placeholder="Username" />
-            <input type="password" placeholder="Password" />
-            <input type="submit" value="Log in" />
+            <Input type="text" placeholder="Username" />
+            <Input type="password" placeholder="Password" />
+            <Button type="submit" value="Log in" />
           </form>
           <Seperator>
             <div></div>
@@ -126,7 +133,8 @@ const Login = () => {
           </FacebookLogin>
         </TopBox>
         <BottomBox>
-          <span>Don't have an account?</span> <a href="#">Sign Up</a>
+          <span>Don't have an account?</span>
+          <Link to="/sign-up">Sign up</Link>
         </BottomBox>
       </Wrapper>
     </Container>
