@@ -99,7 +99,7 @@ const SignUp = () => {
               required: "Password is required",
               minLength: {
                 value: 6,
-                message: "Password should be longer than 6",
+                message: "Password should be longer than 6 Char.",
               },
             })}
             type="password"
