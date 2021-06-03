@@ -21,11 +21,11 @@ const HeaderContainer = styled.div`
 const Subtitle = styled(FatLink)`
   font-size: 16px;
   text-align: center;
-  margin-top: 10px;
+  margin-top: 20px;
 `;
 
 const FacebookLogin = styled(Link)`
-  margin-top: 12px;
+  margin-top: 20px;
   border-radius: 3px;
   background-color: ${(props) => props.theme.accent};
   color: white;
