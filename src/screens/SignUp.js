@@ -7,6 +7,7 @@ import BottomBox from "../components/auth/BottomBox";
 import Button from "../components/auth/Button";
 import FormBox from "../components/auth/FormBox";
 import Input from "../components/auth/Input";
+import PageTitle from "../components/auth/PageTitle";
 import Seperator from "../components/auth/Seperator";
 import { FatLink, Title } from "../components/shared";
 import routes from "../routes";
@@ -44,6 +45,7 @@ const FacebookLogin = styled(Link)`
 const SignUp = () => {
   return (
     <AuthLayout>
+      <PageTitle title="Sign up" />
       <FormBox>
         <HeaderContainer>
           <Title>Pharmstagram</Title>
@@ -51,7 +53,7 @@ const SignUp = () => {
             Sign up to see photos and videos from your friends.
           </Subtitle>
         </HeaderContainer>
-        <FacebookLogin>
+        <FacebookLogin to={"/"}>
           <FontAwesomeIcon icon={faFacebookSquare} />
           <span> Log in with Facebook</span>
         </FacebookLogin>
