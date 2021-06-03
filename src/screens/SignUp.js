@@ -1,11 +1,13 @@
 import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
 import Button from "../components/auth/Button";
 import FormBox from "../components/auth/FormBox";
+import FormError from "../components/auth/FormError";
 import Input from "../components/auth/Input";
 import PageTitle from "../components/auth/PageTitle";
 import Seperator from "../components/auth/Seperator";
@@ -43,6 +45,12 @@ const FacebookLogin = styled(Link)`
 `;
 
 const SignUp = () => {
+  const { register, handleSubmit, formState } = useForm({
+    mode: "onChange",
+  });
+  const onSubmitValid = (data) => {
+    console.log(data);
+  };
   return (
     <AuthLayout>
       <PageTitle title="Sign up" />
@@ -58,12 +66,48 @@ const SignUp = () => {
           <span> Log in with Facebook</span>
         </FacebookLogin>
         <Seperator />
-        <form>
-          <Input type="text" placeholder="Name" />
-          <Input type="email" placeholder="Email" />
-          <Input type="text" placeholder="Username" />
-          <Input type="password" placeholder="Password" />
-          <Button type="submit" value="Sign up" />
+        <form onSubmit={handleSubmit(onSubmitValid)}>
+          <Input
+            {...register("name", {
+              required: "Name is required",
+            })}
+            type="text"
+            placeholder="Name"
+            hasError={Boolean(formState?.errors?.name?.message)}
+          />
+          <FormError message={formState?.errors?.name?.message} />
+          <Input
+            {...register("email", {
+              required: "Email is required",
+            })}
+            type="email"
+            placeholder="Email"
+            hasError={Boolean(formState?.errors?.email?.message)}
+          />
+          <FormError message={formState?.errors?.email?.message} />
+          <Input
+            {...register("username", {
+              required: "Username is required",
+            })}
+            type="text"
+            placeholder="Username"
+            hasError={Boolean(formState?.errors?.username?.message)}
+          />
+          <FormError message={formState?.errors?.username?.message} />
+          <Input
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password should be longer than 6",
+              },
+            })}
+            type="password"
+            placeholder="Password"
+            hasError={Boolean(formState?.errors?.password?.message)}
+          />
+          <FormError message={formState?.errors?.password?.message} />
+          <Button type="submit" value="Sign up" disabled={!formState.isValid} />
         </form>
       </FormBox>
       <BottomBox cta="Have an account?" linkText="Log in" link={routes.home} />
