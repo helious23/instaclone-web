@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { logUserIn } from "../apollo";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
 import Button from "../components/auth/Button";
@@ -29,7 +30,9 @@ const Form = styled.form`
 
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
+    # 변수가 있을 경우 $변수명:타입
     login(username: $username, password: $password) {
+      # 변수 지정
       ok
       token
       error
@@ -38,30 +41,49 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
-  const { register, handleSubmit, formState, getValues, setError } = useForm({
-    mode: "onChange",
+  const {
+    register,
+    handleSubmit,
+    formState,
+    getValues,
+    setError,
+    clearErrors,
+  } = useForm({
+    // register : name, required, validation
+    // handleSubmit : form 에 적용 handleSubmit(onValidFn, inValidFn)
+    mode: "onChange", // input 창이 변할때 마다 ex)onBlur : unfocus
   });
   const onCompleted = (data) => {
     const {
-      login: { ok, error, token },
+      login: { ok, error, token }, // backend 에서 가져온 data
     } = data;
     if (!ok) {
-      setError("result", {
-        message: error,
+      return setError("result", {
+        // error 의 이름
+        message: error, // error message
       });
+    }
+    if (token) {
+      logUserIn(token);
     }
   };
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+    // mutation login 함수로 담음 : mutation trigger fn
     onCompleted,
   });
   const onSubmitValid = (data) => {
+    // valid 일 때 cb 함수
     if (loading) {
       return;
     }
-    const { username, password } = getValues();
+    const { username, password } = getValues(); // form 값을 변수로 가져옴
     login({
-      variables: { username, password },
+      variables: { username, password }, //getValues 로 가져온 변수를 login 에 변수로 담아서 실행
     });
+  };
+
+  const clearLoginError = () => {
+    if (formState.errors.result) clearErrors("result");
   };
 
   return (
@@ -76,6 +98,7 @@ const Login = () => {
             {...register("username", {
               required: "Username is required",
             })}
+            onFocus={clearLoginError}
             type="text"
             placeholder="Username"
             hasError={Boolean(formState?.errors?.username?.message)}
@@ -89,6 +112,7 @@ const Login = () => {
                 message: "Password should be longer than 6 Char.",
               },
             })}
+            onFocus={clearLoginError}
             type="password"
             placeholder="Password"
             hasError={Boolean(formState?.errors?.password?.message)}
