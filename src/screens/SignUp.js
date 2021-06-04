@@ -1,7 +1,9 @@
+import { useMutation } from "@apollo/client";
 import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import gql from "graphql-tag";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import AuthLayout from "../components/auth/AuthLayout";
 import BottomBox from "../components/auth/BottomBox";
@@ -44,13 +46,57 @@ const FacebookLogin = styled(Link)`
   }
 `;
 
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation createAccount(
+    $firstName: String!
+    $lastName: String
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(
+      firstName: $firstName
+      lastName: $lastName
+      username: $username
+      email: $email
+      password: $password
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
 const SignUp = () => {
-  const { register, handleSubmit, formState } = useForm({
+  const history = useHistory(); // redirect api
+  const { register, handleSubmit, formState, setError } = useForm({
     mode: "onChange",
   });
   const onSubmitValid = (data) => {
-    console.log(data);
+    if (loading) {
+      return;
+    }
+
+    createAccount({
+      variables: { ...data },
+    });
   };
+
+  const onCompleted = (data) => {
+    const {
+      createAccount: { ok, error },
+    } = data;
+    if (!ok) {
+      return setError("result", {
+        message: error,
+      });
+    }
+    history.push(routes.home); // sign up 에 성공한 user 를 home 으로 redirect
+  };
+  const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
+    onCompleted,
+  });
+
   return (
     <AuthLayout>
       <PageTitle title="Sign up" />
@@ -68,14 +114,21 @@ const SignUp = () => {
         <Seperator />
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
-            {...register("name", {
-              required: "Name is required",
+            {...register("firstName", {
+              required: "First Name is required",
             })}
             type="text"
-            placeholder="Name"
-            hasError={Boolean(formState?.errors?.name?.message)}
+            placeholder="First Name"
+            hasError={Boolean(formState?.errors?.firstName?.message)}
           />
-          <FormError message={formState?.errors?.name?.message} />
+          <FormError message={formState?.errors?.firstName?.message} />
+          <Input
+            {...register("lastName")}
+            type="text"
+            placeholder="Last Name"
+            hasError={Boolean(formState?.errors?.lastName?.message)}
+          />
+          <FormError message={formState?.errors?.lastName?.message} />
           <Input
             {...register("email", {
               required: "Email is required",
@@ -112,7 +165,12 @@ const SignUp = () => {
             hasError={Boolean(formState?.errors?.password?.message)}
           />
           <FormError message={formState?.errors?.password?.message} />
-          <Button type="submit" value="Sign up" disabled={!formState.isValid} />
+          <Button
+            type="submit"
+            value={loading ? "Loading..." : "Sign Up"}
+            disabled={!formState.isValid || loading}
+          />
+          <FormError message={formState?.errors?.result?.message} />
         </form>
       </FormBox>
       <BottomBox cta="Have an account?" linkText="Log in" link={routes.home} />
