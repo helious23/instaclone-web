@@ -3,6 +3,7 @@ import { faFacebookSquare } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import { useForm } from "react-hook-form";
+import { useLocation } from "react-router";
 import styled from "styled-components";
 import { logUserIn } from "../apollo";
 import AuthLayout from "../components/auth/AuthLayout";
@@ -11,6 +12,7 @@ import Button from "../components/auth/Button";
 import FormBox from "../components/auth/FormBox";
 import FormError from "../components/auth/FormError";
 import Input from "../components/auth/Input";
+import Notification from "../components/auth/Notification";
 import PageTitle from "../components/auth/PageTitle";
 import Seperator from "../components/auth/Seperator";
 import { Title } from "../components/shared";
@@ -41,6 +43,8 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
+  const location = useLocation();
+
   const {
     register,
     handleSubmit,
@@ -52,6 +56,10 @@ const Login = () => {
     // register : name, required, validation
     // handleSubmit : form 에 적용 handleSubmit(onValidFn, inValidFn)
     mode: "onChange", // input 창이 변할때 마다 ex)onBlur : unfocus
+    defaultValues: {
+      username: location?.state?.username || "",
+      password: location?.state?.password || "",
+    },
   });
   const onCompleted = (data) => {
     const {
@@ -93,6 +101,7 @@ const Login = () => {
         <div>
           <Title>Pharmstagram</Title>
         </div>
+        <Notification message={location?.state?.message} />
         <Form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("username", {

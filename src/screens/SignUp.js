@@ -69,7 +69,7 @@ const CREATE_ACCOUNT_MUTATION = gql`
 
 const SignUp = () => {
   const history = useHistory(); // redirect api
-  const { register, handleSubmit, formState, setError } = useForm({
+  const { register, handleSubmit, formState, setError, getValues } = useForm({
     mode: "onChange",
   });
   const onSubmitValid = (data) => {
@@ -83,6 +83,7 @@ const SignUp = () => {
   };
 
   const onCompleted = (data) => {
+    const { username, password } = getValues(); // history 로 보내기 위해 가져옴
     const {
       createAccount: { ok, error },
     } = data;
@@ -91,7 +92,11 @@ const SignUp = () => {
         message: error,
       });
     }
-    history.push(routes.home); // sign up 에 성공한 user 를 home 으로 redirect
+    history.push(routes.home, {
+      message: "Account created. Plaese log in.",
+      username,
+      password,
+    }); // state 로 obj 를 보낼 수 있음
   };
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
     onCompleted,
