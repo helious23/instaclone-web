@@ -4,6 +4,7 @@ const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
 
 export const isLoggedInVar = makeVar(Boolean(localStorage.getItem(TOKEN)));
+// localstorage 에 token 이 있으면 true : logged in, vice versa
 
 export const logUserIn = (token) => {
   localStorage.setItem(TOKEN, token);
@@ -29,6 +30,6 @@ export const disableDarkMode = () => {
 };
 
 export const client = new ApolloClient({
-  uri: "https://pharmstagram-backend.herokuapp.com/graphql",
+  uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
 });
