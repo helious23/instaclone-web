@@ -16,3 +16,8 @@ export const Title = styled.div`
   font-family: "Playball", cursive, sans-serif;
   font-size: 40px;
 `;
+
+export const Subtitle = styled.div`
+  font-family: "Playball", cursive, sans-serif;
+  font-size: 30px;
+`;
