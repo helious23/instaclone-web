@@ -1,4 +1,10 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+  makeVar,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";
@@ -14,7 +20,9 @@ export const logUserIn = (token) => {
 export const logUserOut = (history) => {
   localStorage.removeItem(TOKEN);
   isLoggedInVar(false);
-  history.replace();
+  if (history) {
+    history.replace();
+  }
   window.location.reload();
 };
 
@@ -29,7 +37,20 @@ export const disableDarkMode = () => {
   darkModeVar(false);
 };
 
+const httpLink = createHttpLink({
+  uri: "https://pharmstagram-backend.herokuapp.com/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      token: localStorage.getItem(TOKEN), // 기존의 header 에 token data 추가
+    },
+  };
+});
+
 export const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
