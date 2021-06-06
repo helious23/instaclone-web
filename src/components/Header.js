@@ -44,6 +44,9 @@ const Button = styled.span`
 const IconsContainer = styled.div`
   display: flex;
   align-items: center;
+  svg {
+    font-size: 20px;
+  }
 `;
 
 const Header = () => {
@@ -59,10 +62,10 @@ const Header = () => {
           {isLoggedIn ? (
             <IconsContainer>
               <Icon>
-                <FontAwesomeIcon icon={faHome} size="2x" />
+                <FontAwesomeIcon icon={faHome} />
               </Icon>
               <Icon>
-                <FontAwesomeIcon icon={faCompass} size="2x" />
+                <FontAwesomeIcon icon={faCompass} />
               </Icon>
               <Icon>
                 <Avatar url={data?.me?.avatar} />
