@@ -15,7 +15,7 @@ const useUser = () => {
   const hasToken = useReactiveVar(isLoggedInVar);
   const { data } = useQuery(ME_QUERY, {
     skip: !hasToken,
-    fetchPolicy: "no-cache",
+    // fetchPolicy: "no-cache",
   });
   useEffect(() => {
     if (data?.me === null) {

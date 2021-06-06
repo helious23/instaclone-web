@@ -59,10 +59,10 @@ const Header = () => {
           {isLoggedIn ? (
             <IconsContainer>
               <Icon>
-                <FontAwesomeIcon icon={faHome} size="lg" />
+                <FontAwesomeIcon icon={faHome} size="2x" />
               </Icon>
               <Icon>
-                <FontAwesomeIcon icon={faCompass} size="lg" />
+                <FontAwesomeIcon icon={faCompass} size="2x" />
               </Icon>
               <Icon>
                 <Avatar url={data?.me?.avatar} />

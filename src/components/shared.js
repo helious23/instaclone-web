@@ -21,3 +21,7 @@ export const Subtitle = styled.div`
   font-family: "Playball", cursive, sans-serif;
   font-size: 30px;
 `;
+
+export const FatText = styled.span`
+  font-weight: 600;
+`;
