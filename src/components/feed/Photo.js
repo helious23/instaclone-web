@@ -72,11 +72,34 @@ const Likes = styled(FatText)`
   display: block;
 `;
 const Photo = ({ id, user, file, isLiked, likes }) => {
-  const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
+  const updateToggleLike = (cache, result) => {
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+    if (ok) {
+      cache.writeFragment({
+        id: `Photo:${id}`, // apollo cache 에 있는 형태로 작성
+        fragment: gql`
+          fragment SomeName on Photo {
+            isLiked # 수정하고 싶은 항목
+          }
+        `,
+        data: {
+          // 수정하고 싶은 데이터
+          isLiked: !isLiked, // props 로 받은 isLiked 의 반대값
+        },
+      });
+    }
+  };
+
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
     },
     // refetchQueries: [{ query: FEED_QUERY }], query 자체를 refetch: query size 가 크면 비추
+    update: updateToggleLike, // cache data 를 직접 수정
   });
   return (
     <PhotoContainer key={id}>
