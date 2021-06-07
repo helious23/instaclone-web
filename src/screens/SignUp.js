@@ -76,7 +76,6 @@ const SignUp = () => {
     if (loading) {
       return;
     }
-
     createAccount({
       variables: { ...data },
     });

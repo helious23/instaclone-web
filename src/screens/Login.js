@@ -91,7 +91,9 @@ const Login = () => {
   };
 
   const clearLoginError = () => {
-    if (formState.errors.result) clearErrors("result");
+    if (formState.errors.result) {
+      clearErrors("result");
+    }
   };
 
   return (

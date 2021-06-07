@@ -10,7 +10,6 @@ const ME_QUERY = gql`
     }
   }
 `;
-
 const useUser = () => {
   const hasToken = useReactiveVar(isLoggedInVar);
   const { data } = useQuery(ME_QUERY, {

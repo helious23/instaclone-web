@@ -3,6 +3,7 @@ import reset from "styled-reset";
 
 export const lightTheme = {
   accent: "#0095f6",
+  boxBgColor: "white",
   bgColor: "#FAFAFA",
   borderColor: "rgb(219, 219, 219)",
   fontColor: "rgb(38,38,38)",
@@ -10,6 +11,7 @@ export const lightTheme = {
 };
 export const darkTheme = {
   accent: "gray",
+  boxBgColor: "black",
   fontColor: "lightgray",
   bgColor: "#000",
   formBgColor: "black",
