@@ -76,6 +76,7 @@ const Photo = ({ id, user, file, isLiked, likes }) => {
     variables: {
       id,
     },
+    // refetchQueries: [{ query: FEED_QUERY }], query 자체를 refetch: query size 가 크면 비추
   });
   return (
     <PhotoContainer key={id}>
