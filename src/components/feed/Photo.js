@@ -71,7 +71,26 @@ const Likes = styled(FatText)`
   margin-top: 10px;
   display: block;
 `;
-const Photo = ({ id, user, file, isLiked, likes }) => {
+
+const Comments = styled.div`
+  margin-top: 20px;
+`;
+
+const Comment = styled.div``;
+
+const CommentCaption = styled.span`
+  margin-left: 10px;
+`;
+
+const CommentCount = styled.span`
+  opacity: 0.7;
+  margin: 10px 0px;
+  display: block;
+  font-weight: 600;
+  font-size: 10px;
+`;
+
+const Photo = ({ id, user, file, isLiked, likes, caption, commentNumber }) => {
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -140,6 +159,15 @@ const Photo = ({ id, user, file, isLiked, likes }) => {
           </div>
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
+        <Comments>
+          <Comment>
+            <FatText>{user.username}</FatText>
+            <CommentCaption>{caption}</CommentCaption>
+          </Comment>
+          <CommentCount>
+            {commentNumber === 1 ? "1 comment" : `${commentNumber} comments `}
+          </CommentCount>
+        </Comments>
       </PhotoData>
     </PhotoContainer>
   );
@@ -154,6 +182,8 @@ Photo.propTypes = {
   file: PropTypes.string.isRequired,
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
+  caption: PropTypes.string,
+  commentNumber: PropTypes.number.isRequired,
 };
 
 export default Photo;
