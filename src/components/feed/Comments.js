@@ -1,4 +1,7 @@
+import { useMutation } from "@apollo/client";
+import gql from "graphql-tag";
 import PropTypes from "prop-types";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import Comment from "./Comment";
 
@@ -14,7 +17,46 @@ const CommentCount = styled.span`
   font-size: 10px;
 `;
 
-const Comments = ({ author, caption, commentNumber, comments }) => {
+const PostCommentContainer = styled.div`
+  margin-top: 10px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  border-top: 1px solid ${(props) => props.theme.borderColor};
+`;
+const PostCommentInput = styled.input`
+  width: 100%;
+  &::placeholder {
+    font-size: 12px;
+  }
+`;
+
+const CREATE_COMMENT_MUTATION = gql`
+  mutation createComment($photoId: Int!, $payload: String!) {
+    createComment(photoId: $photoId, payload: $payload) {
+      ok
+      error
+    }
+  }
+`;
+
+const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
+  const [createCommentMutation, { loading }] = useMutation(
+    CREATE_COMMENT_MUTATION
+  );
+  const { register, handleSubmit, setValue } = useForm();
+  const onValid = (data) => {
+    const { payload } = data;
+    if (loading) {
+      return;
+    }
+    createCommentMutation({
+      variables: {
+        photoId,
+        payload,
+      },
+    });
+    setValue("payload", "");
+  };
   return (
     <CommentContainer>
       <Comment author={author} payload={caption} />
@@ -28,11 +70,23 @@ const Comments = ({ author, caption, commentNumber, comments }) => {
           payload={comment.payload}
         />
       ))}
+      <PostCommentContainer>
+        <form onSubmit={handleSubmit(onValid)}>
+          <PostCommentInput
+            {...register("payload", {
+              required: true,
+            })}
+            type="text"
+            placeholder="Write a comment..."
+          />
+        </form>
+      </PostCommentContainer>
     </CommentContainer>
   );
 };
 
 Comments.propTypes = {
+  photoId: PropTypes.number.isRequired,
   author: PropTypes.string.isRequired,
   caption: PropTypes.string,
   commentNumber: PropTypes.number.isRequired,

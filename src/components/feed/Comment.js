@@ -4,7 +4,9 @@ import styled from "styled-components";
 import { FatText } from "../shared";
 import { Link } from "react-router-dom";
 
-const CommentContainer = styled.div``;
+const CommentContainer = styled.div`
+  margin-bottom: 7px;
+`;
 const CommentCaption = styled.span`
   margin-left: 10px;
   a {
@@ -28,7 +30,7 @@ const Comment = ({ author, payload }) => {
               <Link to={`/hashtag/${word}`}>{word}</Link>{" "}
             </React.Fragment>
           ) : (
-            <React.Fragment key={index}>{word}</React.Fragment>
+            <React.Fragment key={index}>{word} </React.Fragment>
           )
         )}
       </CommentCaption>
