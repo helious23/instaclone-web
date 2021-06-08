@@ -11,7 +11,7 @@ const CREATE_COMMENT_MUTATION = gql`
     createComment(photoId: $photoId, payload: $payload) {
       ok
       error
-      id
+      id # backend 수정
     }
   }
 `;
@@ -42,11 +42,11 @@ const PostCommentInput = styled.input`
 `;
 
 const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
-  const { data: userData } = useUser();
+  const { data: userData } = useUser(); // hook 사용
   const { register, handleSubmit, setValue, getValues } = useForm();
   const createCommentUpdate = (cache, result) => {
     const { payload } = getValues();
-    setValue("payload", "");
+    setValue("payload", ""); // 댓글창 비워줌
     const {
       data: {
         createComment: { ok, id },
@@ -54,8 +54,9 @@ const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
     } = result;
     if (ok && userData?.me) {
       const newComment = {
+        // comment object 생성
         __typename: "Comment",
-        createAt: Date.now() + "",
+        createAt: Date.now() + "", // string 으로 변환
         id,
         isMine: true,
         payload,
@@ -64,6 +65,7 @@ const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
         },
       };
       const newCacheComment = cache.writeFragment({
+        // 직접 cache에 넣어줌
         data: newComment,
         fragment: gql`
           fragment SomeName on Comment {
@@ -82,7 +84,7 @@ const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
         id: `Photo:${photoId}`,
         fields: {
           comments(prev) {
-            return [...prev, newCacheComment];
+            return [...prev, newCacheComment]; //reference 만 추가
           },
           commentNumber(prev) {
             return prev + 1;
@@ -117,9 +119,12 @@ const Comments = ({ photoId, author, caption, commentNumber, comments }) => {
       </CommentCount>
       {comments?.map((comment) => (
         <Comment
+          id={comment.id}
           key={comment.id}
+          photoId={photoId}
           author={comment.user.username}
           payload={comment.payload}
+          isMine={comment.isMine}
         />
       ))}
       <PostCommentContainer>
