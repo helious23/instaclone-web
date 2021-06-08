@@ -12,6 +12,7 @@ import { faHeart as SolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
+import Comments from "./Comments";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -72,25 +73,16 @@ const Likes = styled(FatText)`
   display: block;
 `;
 
-const Comments = styled.div`
-  margin-top: 20px;
-`;
-
-const Comment = styled.div``;
-
-const CommentCaption = styled.span`
-  margin-left: 10px;
-`;
-
-const CommentCount = styled.span`
-  opacity: 0.7;
-  margin: 10px 0px;
-  display: block;
-  font-weight: 600;
-  font-size: 10px;
-`;
-
-const Photo = ({ id, user, file, isLiked, likes, caption, commentNumber }) => {
+const Photo = ({
+  id,
+  user,
+  file,
+  isLiked,
+  likes,
+  caption,
+  commentNumber,
+  comments,
+}) => {
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -159,15 +151,12 @@ const Photo = ({ id, user, file, isLiked, likes, caption, commentNumber }) => {
           </div>
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
-        <Comments>
-          <Comment>
-            <FatText>{user.username}</FatText>
-            <CommentCaption>{caption}</CommentCaption>
-          </Comment>
-          <CommentCount>
-            {commentNumber === 1 ? "1 comment" : `${commentNumber} comments `}
-          </CommentCount>
-        </Comments>
+        <Comments
+          author={user.username}
+          caption={caption}
+          comments={comments}
+          commentNumber={commentNumber}
+        />
       </PhotoData>
     </PhotoContainer>
   );
