@@ -90,29 +90,22 @@ const Photo = ({
       },
     } = result;
     if (ok) {
-      const fragmentId = `Photo:${id}`;
-      const fragment = gql`
-        fragment SomeName on Photo {
-          isLiked # 수정하고 싶은 항목
-          likes
-        }
-      `;
-      const result = cache.readFragment({
-        id: fragmentId,
-        fragment,
-      });
-      if ("isLiked" in result && "likes" in result) {
-        const { isLiked: cacheisLiked, likes: cachelikes } = result;
-        cache.writeFragment({
-          id: fragmentId, // apollo cache 에 있는 형태로 작성
-          fragment,
-          data: {
-            // 수정하고 싶은 데이터
-            isLiked: !cacheisLiked, // readFragement 에서 읽은 cache 의 isLiked 값
-            likes: cacheisLiked ? cachelikes - 1 : cachelikes + 1,
+      const photoId = `Photo:${id}`;
+      cache.modify({
+        id: photoId, // 수정할 cache 의 id
+        fields: {
+          //수정할 field 항목을 fn으로 작성
+          isLiked(prev) {
+            return !prev;
           },
-        });
-      }
+          likes(prev) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
     }
   };
 
