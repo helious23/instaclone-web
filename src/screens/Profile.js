@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
@@ -132,6 +132,7 @@ const ProfileBtn = styled(Button).attrs({
 const Profile = () => {
   const { username } = useParams();
   const { data: userData } = useUser();
+  const client = useApolloClient();
   const page = 1;
   const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
@@ -139,36 +140,61 @@ const Profile = () => {
       page,
     },
   });
+  const upfollowUserUpdate = (cache, result) => {
+    const {
+      data: {
+        unfollowUser: { ok },
+      },
+    } = result;
+    if (!ok) {
+      return;
+    }
+    cache.modify({
+      id: `User:${username}`,
+      fields: {
+        isFollowing(prev) {
+          return false;
+        },
+        totalFollowers(prev) {
+          return prev - 1;
+        },
+      },
+    });
+  };
+
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username, page } },
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: {
-          username: userData?.me?.username,
-          page,
+    update: upfollowUserUpdate,
+  });
+
+  const followUserCompleted = (data) => {
+    const {
+      followUser: { ok },
+    } = data;
+    if (!ok) {
+      return;
+    }
+    const { cache } = client;
+    cache.modify({
+      id: `User:${username}`,
+      fields: {
+        isFollowing(prev) {
+          return true;
+        },
+        totalFollowers(prev) {
+          return prev + 1;
         },
       },
-    ],
-  });
+    });
+  };
 
   const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
     variables: {
       username,
     },
-    refetchQueries: [
-      { query: SEE_PROFILE_QUERY, variables: { username, page } },
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: {
-          username: userData?.me?.username,
-          page,
-        },
-      },
-    ],
+    onCompleted: followUserCompleted,
   });
 
   const getButton = (seeProfile) => {
