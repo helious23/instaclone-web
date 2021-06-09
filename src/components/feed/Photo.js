@@ -43,6 +43,11 @@ const Username = styled(FatText)`
   margin-left: 15px;
 `;
 
+const PhotoSection = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 const PhotoFile = styled.img`
   max-width: 100%; // image 너비에 상관없이 꽉 채움
 `;
@@ -127,7 +132,9 @@ const Photo = ({
           <Username>{user.username}</Username>
         </Link>
       </PhotoHeader>
-      <PhotoFile src={file} />
+      <PhotoSection>
+        <PhotoFile src={file} />
+      </PhotoSection>
       <PhotoData>
         <PhotoActions>
           <div>
