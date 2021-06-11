@@ -74,6 +74,10 @@ const PhotoAction = styled.div`
   cursor: pointer;
 `;
 
+const BookmarkContainer = styled.div`
+  cursor: pointer;
+`;
+
 const Likes = styled(FatText)`
   margin-top: 10px;
   display: block;
@@ -151,9 +155,9 @@ const Photo = ({
               <FontAwesomeIcon icon={faPaperPlane} />
             </PhotoAction>
           </div>
-          <div>
+          <BookmarkContainer>
             <FontAwesomeIcon icon={faBookmark} />
-          </div>
+          </BookmarkContainer>
         </PhotoActions>
         <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         <Comments

@@ -38,7 +38,10 @@ export const disableDarkMode = () => {
 };
 
 const httpLink = createHttpLink({
-  uri: "https://pharmstagram-backend.herokuapp.com/graphql",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://pharmstagram-backend.herokuapp.com/graphql"
+      : "http://localhost:4000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
