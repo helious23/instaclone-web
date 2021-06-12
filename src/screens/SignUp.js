@@ -69,7 +69,14 @@ const CREATE_ACCOUNT_MUTATION = gql`
 
 const SignUp = () => {
   const history = useHistory(); // redirect api
-  const { register, handleSubmit, formState, setError, getValues } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState,
+    setError,
+    getValues,
+    clearErrors,
+  } = useForm({
     mode: "onChange",
   });
   const onSubmitValid = (data) => {
@@ -100,6 +107,11 @@ const SignUp = () => {
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
     onCompleted,
   });
+  const clearCreateError = () => {
+    if (formState.errors.result) {
+      clearErrors("result");
+    }
+  };
 
   return (
     <AuthLayout>
@@ -124,6 +136,7 @@ const SignUp = () => {
             type="text"
             placeholder="First Name"
             hasError={Boolean(formState?.errors?.firstName?.message)}
+            onFocus={clearCreateError}
           />
           <FormError message={formState?.errors?.firstName?.message} />
           <Input
@@ -131,6 +144,7 @@ const SignUp = () => {
             type="text"
             placeholder="Last Name"
             hasError={Boolean(formState?.errors?.lastName?.message)}
+            onFocus={clearCreateError}
           />
           <FormError message={formState?.errors?.lastName?.message} />
           <Input
@@ -145,6 +159,7 @@ const SignUp = () => {
             type="email"
             placeholder="Email"
             hasError={Boolean(formState?.errors?.email?.message)}
+            onFocus={clearCreateError}
           />
           <FormError message={formState?.errors?.email?.message} />
           <Input
@@ -154,6 +169,7 @@ const SignUp = () => {
             type="text"
             placeholder="Username"
             hasError={Boolean(formState?.errors?.username?.message)}
+            onFocus={clearCreateError}
           />
           <FormError message={formState?.errors?.username?.message} />
           <Input
@@ -167,6 +183,7 @@ const SignUp = () => {
             type="password"
             placeholder="Password"
             hasError={Boolean(formState?.errors?.password?.message)}
+            onFocus={clearCreateError}
           />
           <FormError message={formState?.errors?.password?.message} />
           <Button
