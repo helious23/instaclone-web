@@ -41,7 +41,7 @@ const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === "production"
       ? "https://pharmstagram-backend.herokuapp.com/graphql"
-      : "http://localhost:4000/graphql",
+      : "https://pharmstagram-backend.herokuapp.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
