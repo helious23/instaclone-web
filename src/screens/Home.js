@@ -1,12 +1,13 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
+import { useState } from "react";
 import PageTitle from "../components/auth/PageTitle";
 import Photo from "../components/feed/Photo";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 
 const FEED_QUERY = gql`
-  query seeFeed {
-    seeFeed {
+  query seeFeed($offset: Int!) {
+    seeFeed(offset: $offset) {
       ...PhotoFragment
       user {
         username
@@ -25,7 +26,12 @@ const FEED_QUERY = gql`
 `;
 
 const Home = () => {
-  const { data } = useQuery(FEED_QUERY);
+  const [offset, setOffset] = useState(0);
+  const { data } = useQuery(FEED_QUERY, {
+    variables: {
+      offset,
+    },
+  });
   return (
     <div>
       <PageTitle title="Home" />

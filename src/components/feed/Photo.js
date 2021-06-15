@@ -175,7 +175,7 @@ const Photo = ({
 Photo.propTypes = {
   id: PropTypes.number.isRequired,
   user: PropTypes.shape({
-    avagtar: PropTypes.string,
+    avatar: PropTypes.string,
     username: PropTypes.string.isRequired,
   }),
   file: PropTypes.string.isRequired,
