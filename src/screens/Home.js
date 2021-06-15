@@ -26,7 +26,7 @@ const FEED_QUERY = gql`
 `;
 
 const Home = () => {
-  const [offset, setOffset] = useState(0);
+  const [offset] = useState(0);
   const { data } = useQuery(FEED_QUERY, {
     variables: {
       offset,
